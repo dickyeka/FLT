@@ -21,10 +21,10 @@ const emit = defineEmits([
 
 function getSetRows(ex) {
  const saved = props.currentSession.exercises?.[ex.id]?.setRows;
- const count = Math.max(saved?.length || 0, ex.sets || 0);
+ const count = (saved && saved.length) || ex.sets || 1;
  const baseReps = ex.reps || "";
  return Array.from(
-  { length: count || 1 },
+  { length: count },
   (_, i) => saved?.[i] || { weight: "", reps: baseReps },
  );
 }
