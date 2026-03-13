@@ -1,0 +1,16 @@
+# Node / monorepo
+node_modules
+pnpm-lock.yaml
+yarn.lock
+npm-debug.log*
+.DS_Store
+.vercel
+
+# Build outputs
+dist
+client/dist
+
+# Env files
+.env
+server/.env
+client/.env
