@@ -135,6 +135,31 @@ function withDefaults(session) {
  };
 }
 
+function latestBodyWeight() {
+ if (weights.value.length)
+  return weights.value[weights.value.length - 1].weight;
+ return targetStart; // fallback to starting weight
+}
+
+function calcSessionKcal(exercisesMap, dayType) {
+ const defs = DAYS[dayType]?.exercises || [];
+ const bw = latestBodyWeight();
+ const calPerRep = 0.00306 * bw;
+ let totalReps = 0;
+ defs.forEach((def) => {
+  const ex = exercisesMap?.[def.id] || {};
+  if (ex.setRows && ex.setRows.length) {
+   totalReps += ex.setRows.reduce((s, row) => s + (Number(row.reps) || 0), 0);
+  } else if (ex.reps) {
+   totalReps += (Number(ex.reps) || 0) * Number(ex.sets || def.sets || 1);
+  } else {
+   totalReps += (Number(def.reps) || 0) * Number(ex.sets || def.sets || 1);
+  }
+ });
+ const kcal = calPerRep * totalReps;
+ return Math.round(kcal); // integer to satisfy DB schema
+}
+
 async function fetchSessions() {
  try {
   const res = await fetch(`${API_BASE}/api/sessions`);
@@ -189,7 +214,11 @@ async function saveSession(partial, toastMsg = "") {
   ...partial,
   date: workoutDate.value,
   dayType: currentDay.value,
-  kcal: DAYS[currentDay.value].kcal,
+  kcal:
+   calcSessionKcal(
+    partial.exercises || currentSession.value.exercises,
+    currentDay.value,
+   ) || DAYS[currentDay.value].kcal,
  };
  try {
   const res = await fetch(`${API_BASE}/api/sessions`, {
