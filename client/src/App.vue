@@ -258,6 +258,18 @@ async function saveExSet(exId, setIdx, field, value) {
  await saveSession({ exercises });
 }
 
+async function removeExSet(exId, setIdx) {
+ const exercises = { ...currentSession.value.exercises };
+ const ex = { ...(exercises[exId] || {}) };
+ const setRows = [...(ex.setRows || [])];
+ if (setRows.length <= 1) return;
+ setRows.splice(setIdx, 1);
+ ex.setRows = setRows;
+ exercises[exId] = ex;
+ upsertSessionLocal({ ...currentSession.value, exercises });
+ await saveSession({ exercises });
+}
+
 async function toggleCardio() {
  const nextVal = !currentSession.value.cardio;
  upsertSessionLocal({ ...currentSession.value, cardio: nextVal });
@@ -445,6 +457,7 @@ function weightDiffClass(list, idx) {
     @toggle-exercise="toggleExercise"
     @save-ex-input="saveExInput"
     @save-ex-set="saveExSet"
+    @remove-ex-set="removeExSet"
     @toggle-cardio="toggleCardio"
     @save-notes="saveNotes"
     @complete-day="completeDay"

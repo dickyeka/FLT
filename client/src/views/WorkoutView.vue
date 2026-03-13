@@ -13,6 +13,7 @@ const emit = defineEmits([
  "toggle-exercise",
  "save-ex-input",
  "save-ex-set",
+ "remove-ex-set",
  "toggle-cardio",
  "save-notes",
  "complete-day",
@@ -108,6 +109,14 @@ function getSetRows(ex) {
        :value="set.reps || ''"
        @input="emit('save-ex-set', ex.id, idx, 'reps', $event.target.value)"
       />
+      <button
+       class="ex-set-remove"
+       title="Hapus set"
+       @click.stop="emit('remove-ex-set', ex.id, idx)"
+       :disabled="getSetRows(ex).length <= 1"
+      >
+       ✕
+      </button>
      </div>
     </div>
    </div>

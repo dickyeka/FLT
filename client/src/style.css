@@ -450,7 +450,7 @@ body::before {
 }
 .ex-set-row {
  display: grid;
- grid-template-columns: 70px 1fr 1fr;
+ grid-template-columns: 70px 1fr 1fr 36px;
  align-items: center;
  gap: 8px;
 }
@@ -459,6 +459,27 @@ body::before {
  color: var(--muted);
  letter-spacing: 1px;
  text-transform: uppercase;
+}
+.ex-set-remove {
+ background: var(--s3);
+ border: 1px solid var(--border2);
+ color: var(--muted2);
+ border-radius: 8px;
+ cursor: pointer;
+ height: 34px;
+ width: 34px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: all 0.2s;
+}
+.ex-set-remove:hover:enabled {
+ background: var(--s2);
+ color: var(--text);
+}
+.ex-set-remove:disabled {
+ opacity: 0.4;
+ cursor: not-allowed;
 }
 .ex-input-group {
  background: var(--s2);
